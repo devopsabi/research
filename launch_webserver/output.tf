@@ -1,0 +1,49 @@
+# 	Outputs
+
+#	VPC ID
+
+output "vpc_id" {
+  description = "The ID of the VPC"
+  value       = module.networking.vpc.vpc_id
+}
+
+#	VPC CIDR blocks
+
+output "vpc_cidr_block" {
+  description = "The CIDR block of the VPC"
+  value       = module.networking.vpc.vpc_cidr_block
+}
+
+# VPC Private Subnets
+
+output "private_subnets" {
+  description = "A list of private_subnets inside the VPC"
+  value       = module.networking.vpc.private_subnets
+}
+
+# VPC Public Subnets
+
+output "public_subnets" {
+  description = "A list of public_subnets inside the VPC"
+  value       = module.networking.vpc.public_subnets
+}
+
+# VPC NAT Gateway Public IP
+
+output "nat_public_ips" {
+  description = "List of public Elastic IPs created for AWS NAT Gateway"
+  value       = module.networking.vpc.nat_public_ips
+}
+
+# VPC AZS
+
+output "azs" {
+  description = "A list of Availability zones specified as argument to this module"
+  value       = module.networking.vpc.azs
+}
+
+
+output "aws_instance_public_ip" {
+  description = "aws_instance_public_ip"
+  value = [for instance in aws_instance.apache-instance : instance.public_ip]
+}
