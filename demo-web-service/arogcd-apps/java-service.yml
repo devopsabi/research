@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo-web-service
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/devopsabi/my_work.git
+    targetRevision: HEAD
+    path: java-web-service
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: demo-web-service/java
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
