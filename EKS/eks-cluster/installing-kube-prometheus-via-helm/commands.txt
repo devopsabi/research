@@ -1,0 +1,171 @@
+☁  eks-cluster  cd installing-kube-prometheus-via-helm 
+☁  installing-kube-prometheus-via-helm  helm show values prometheus-community/kube-prometheus-stack --version 80.13.3 > values-kube-prometheus-stack-80.13.3.yaml
+☁  installing-kube-prometheus-via-helm  open values-kube-prometheus-stack-80.13.3.yaml 
+☁  installing-kube-prometheus-via-helm  kubectl create namespace nginx-ingress
+☁  installing-kube-prometheus-via-helm  kubectl create namespace nginx-ingress
+namespace/nginx-ingress created
+☁  installing-kube-prometheus-via-helm  helm install my-nginx ingress-nginx/ingress-nginx --namespace nginx-ingress --set controller.metrics.enabled=true --set-string controller.metrics.service.annotations."prometheus\.io/port"="10254" --set-string controller.metrics.service.annotations."prometheus\.io/scrape"="true" 
+NAME: my-nginx
+LAST DEPLOYED: Tue Jan 13 08:04:46 2026
+NAMESPACE: nginx-ingress
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+The ingress-nginx controller has been installed.
+It may take a few minutes for the load balancer IP to be available.
+You can watch the status by running 'kubectl get service --namespace nginx-ingress my-nginx-ingress-nginx-controller --output wide --watch'
+
+An example Ingress that makes use of the controller:
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: example
+    namespace: foo
+  spec:
+    ingressClassName: nginx
+    rules:
+      - host: www.example.com
+        http:
+          paths:
+            - pathType: Prefix
+              backend:
+                service:
+                  name: exampleService
+                  port:
+                    number: 80
+              path: /
+    # This section is only required if TLS is to be enabled for the Ingress
+    tls:
+      - hosts:
+        - www.example.com
+        secretName: example-tls
+
+If TLS is enabled for the Ingress, a Secret containing the certificate and key must also be provided:
+
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: example-tls
+    namespace: foo
+  data:
+    tls.crt: <base64 encoded cert>
+    tls.key: <base64 encoded key>
+  type: kubernetes.io/tls
+☁  installing-kube-prometheus-via-helm 
+
+
+eksctl create iamserviceaccount --name external-dns --namespace external-dns --cluster k8s-abhishek  --attach-policy-arn arn:aws:iam::xxxxxxxxxxx:policy/external-dns-policy --approve  --override-existing-serviceaccounts                     
+2026-01-13 08:07:04 [ℹ]  1 existing iamserviceaccount(s) (external-dns/external-dns) will be excluded
+2026-01-13 08:07:04 [ℹ]  1 iamserviceaccount (external-dns/external-dns) was excluded (based on the include/exclude rules)
+2026-01-13 08:07:04 [!]  metadata of serviceaccounts that exist in Kubernetes will be updated, as --override-existing-serviceaccounts was set
+2026-01-13 08:07:04 [ℹ]  no tasks
+
+
+
+☁  installing-kube-prometheus-via-helm  kubectl create ns  external-dns
+namespace/external-dns created
+☁  installing-kube-prometheus-via-helm  helm install external-dns external-dns/external-dns --namespace external-dns
+
+NAME: external-dns
+LAST DEPLOYED: Tue Jan 13 08:08:15 2026
+NAMESPACE: external-dns
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+***********************************************************************
+* External DNS                                                        *
+***********************************************************************
+  Chart version: 1.20.0
+  App version:   0.20.0
+  Image tag:     registry.k8s.io/external-dns/external-dns:v0.20.0
+***********************************************************************
+☁  installing-kube-prometheus-via-helm  
+
+
+☁  installing-kube-prometheus-via-helm  helm install kube-prometheus-stack  prometheus-community/kube-prometheus-stack --version 80.13.3 -n prometheus
+NAME: kube-prometheus-stack
+LAST DEPLOYED: Tue Jan 13 08:11:15 2026
+NAMESPACE: prometheus
+STATUS: deployed
+REVISION: 1
+NOTES:
+kube-prometheus-stack has been installed. Check its status by running:
+  kubectl --namespace prometheus get pods -l "release=kube-prometheus-stack"
+
+Get Grafana 'admin' user password by running:
+
+  kubectl --namespace prometheus get secrets kube-prometheus-stack-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
+
+Access Grafana local instance:
+
+  export POD_NAME=$(kubectl --namespace prometheus get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=kube-prometheus-stack" -oname)
+  kubectl --namespace prometheus port-forward $POD_NAME 3000
+
+Get your grafana admin user password by running:
+
+  kubectl get secret --namespace prometheus -l app.kubernetes.io/component=admin-secret -o jsonpath="{.items[0].data.admin-password}" | base64 --decode ; echo
+
+
+Visit https://github.com/prometheus-operator/kube-prometheus for instructions on how to create & configure Alertmanager and Prometheus instances using the Operator.
+☁  installing-kube-prometheus-via-helm  
+
+
+
+
+☁  installing-kube-prometheus-via-helm  helm install cert-manager oci://quay.io/jetstack/charts/cert-manager \
+  --namespace cert-manager \
+  --create-namespace \
+  --set crds.enabled=true
+Pulled: quay.io/jetstack/charts/cert-manager:1.19.2
+Digest: sha256:6f7f2d9065fdecb25ae5b1124169cdf0e94092931e2f43f46db8b06a29432b94
+NAME: cert-manager
+LAST DEPLOYED: Tue Jan 13 08:20:45 2026
+NAMESPACE: cert-manager
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+⚠️  WARNING: New default private key rotation policy for Certificate resources.
+The default private key rotation policy for Certificate resources was
+changed to `Always` in cert-manager >= v1.18.0.
+Learn more in the [1.18 release notes](https://cert-manager.io/docs/releases/release-notes/release-notes-1.18).
+
+cert-manager v1.19.2 has been deployed successfully!
+
+In order to begin issuing certificates, you will need to set up a ClusterIssuer
+or Issuer resource (for example, by creating a 'letsencrypt-staging' issuer).
+
+More information on the different types of issuers and how to configure them
+can be found in our documentation:
+
+https://cert-manager.io/docs/configuration/
+
+For information on how to configure cert-manager to automatically provision
+Certificates for Ingress resources, take a look at the `ingress-shim`
+documentation:
+
+https://cert-manager.io/docs/usage/ingress/
+☁  installing-kube-prometheus-via-helm  kubectl -n cert-manager get all
+NAME                                           READY   STATUS    RESTARTS   AGE
+pod/cert-manager-7ff7f97d55-26bpn              1/1     Running   0          52s
+pod/cert-manager-cainjector-59bb669f8d-nfdxq   1/1     Running   0          52s
+pod/cert-manager-webhook-59bbd786df-jzhc7      1/1     Running   0          52s
+
+NAME                              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)            AGE
+service/cert-manager              ClusterIP   172.20.90.29     <none>        9402/TCP           53s
+service/cert-manager-cainjector   ClusterIP   172.20.7.67      <none>        9402/TCP           53s
+service/cert-manager-webhook      ClusterIP   172.20.182.174   <none>        443/TCP,9402/TCP   53s
+
+NAME                                      READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/cert-manager              1/1     1            1           53s
+deployment.apps/cert-manager-cainjector   1/1     1            1           53s
+deployment.apps/cert-manager-webhook      1/1     1            1           53s
+
+NAME                                                 DESIRED   CURRENT   READY   AGE
+replicaset.apps/cert-manager-7ff7f97d55              1         1         1       53s
+replicaset.apps/cert-manager-cainjector-59bb669f8d   1         1         1       53s
+replicaset.apps/cert-manager-webhook-59bbd786df      1         1         1       53s
+☁  installing-kube-prometheus-via-helm  
+

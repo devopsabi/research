@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app01
+  namespace: websites
+  labels:
+    app: app01
+spec:
+  selector:
+    matchLabels:
+      app: app01
+  replicas: 2
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: app01
+    spec:
+      containers:
+      - name: app01
+        image: devopsabi/demo-app-k8s:01
+        ports:
+        - containerPort: 8080
+---

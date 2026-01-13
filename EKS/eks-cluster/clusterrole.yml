@@ -1,0 +1,65 @@
+kind: ClusterRole
+
+apiVersion: rbac.authorization.k8s.io/v1
+
+metadata:
+
+  name: dev-full-access
+
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  - namespaces
+  - pods
+  - configmaps
+  - endpoints
+  - events
+  - limitranges
+  - persistentvolumeclaims
+  - podtemplates
+  - replicationcontrollers
+  - resourcequotas
+  - secrets
+  - serviceaccounts
+  - services
+  verbs:
+  - get
+  - list
+
+- apiGroups: ["", "extensions", "apps"]
+
+  resources: ["*"]
+
+  verbs: ["*"]
+
+- apiGroups: ["batch"]
+
+  resources:
+
+  - jobs
+
+  - cronjobs
+
+  verbs: ["*"]
+
+- apiGroups: ["autoscaling"]
+
+  resources: ["*"]
+
+  verbs: ["*"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: dev-full-access-binding
+subjects:
+- kind: Group
+  name: dev-full-access-group
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: dev-full-access
+  apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: "8080"  
+  name: app01
+  namespace: websites
+  labels:
+    app: app01
+spec:
+  selector:
+    matchLabels:
+      app: app01
+  replicas: 2
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: app01
+    spec:
+      containers:
+      - name: app01
+        image: MY_DOMAINmo-app-k8s:01 
+        ports:
+        - containerPort: 8080
+---
