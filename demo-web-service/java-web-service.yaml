@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-app-01-svc
+  namespace: java-web-service
+spec:
+  ports:
+  - name: java-app-01
+    port: 8080
+    protocol: TCP
+  selector:
+    app: java-app-01
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: java-app-01
+  name: java-app-01
+  namespace: java-web-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: java-app-01
+  template:
+    metadata:
+      annotations: null
+      labels:
+        app: java-app-01
+    spec:
+      containers:
+      - image: devopsabi/java-demo-app:1.0
+        name: java-app-01
+        ports:
+        - containerPort: 8080
