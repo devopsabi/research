@@ -28,3 +28,31 @@ ts=2026-01-14T23:48:50.946783071Z caller=sidecar.go:217 level=info msg="successf
 ts=2026-01-14T23:48:52.933531415Z caller=shipper.go:263 level=warn msg="reading meta file failed, will override it" err="failed to read /prometheus/thanos.shipper.json: open /prometheus/thanos.shipper.json: no such file or directory"
 
 ```
+
+- The TSDB blocks has been uploaded.
+
+```
+☁  thanos-demo  kubectl logs -f prometheus-prometheus-kube-prometheus-prometheus-0 -c thanos-sidecar -n prometheus 
+ts=2026-01-14T23:54:19.053924537Z caller=options.go:26 level=info protocol=gRPC msg="disabled TLS, key and cert must be set to enable"
+ts=2026-01-14T23:54:19.054501039Z caller=factory.go:53 level=info msg="loading bucket configuration"
+ts=2026-01-14T23:54:19.054822139Z caller=sidecar.go:383 level=info msg="starting sidecar"
+ts=2026-01-14T23:54:19.054986365Z caller=reloader.go:238 level=info component=reloader msg="nothing to be watched"
+ts=2026-01-14T23:54:19.055057384Z caller=intrumentation.go:75 level=info msg="changing probe status" status=healthy
+ts=2026-01-14T23:54:19.055074224Z caller=http.go:73 level=info service=http/server component=sidecar msg="listening for requests and metrics" address=:10902
+ts=2026-01-14T23:54:19.055747134Z caller=tls_config.go:274 level=info service=http/server component=sidecar msg="Listening on" address=[::]:10902
+ts=2026-01-14T23:54:19.055766874Z caller=intrumentation.go:56 level=info msg="changing probe status" status=ready
+ts=2026-01-14T23:54:19.055859263Z caller=tls_config.go:277 level=info service=http/server component=sidecar msg="TLS is disabled." http2=false address=[::]:10902
+ts=2026-01-14T23:54:19.055885877Z caller=grpc.go:131 level=info service=gRPC/server component=sidecar msg="listening for serving gRPC" address=:10901
+ts=2026-01-14T23:54:19.059428336Z caller=sidecar.go:195 level=info msg="successfully loaded prometheus version"
+ts=2026-01-14T23:54:19.068642626Z caller=sidecar.go:217 level=info msg="successfully loaded prometheus external labels" external_labels="{prometheus=\"prometheus/prometheus-kube-prometheus-prometheus\", prometheus_replica=\"prometheus-prometheus-kube-prometheus-prometheus-0\"}"
+ts=2026-01-14T23:54:21.057762651Z caller=shipper.go:263 level=warn msg="reading meta file failed, will override it" err="failed to read /prometheus/thanos.shipper.json: open /prometheus/thanos.shipper.json: no such file or directory"
+ts=2026-01-15T03:19:23.904107143Z caller=shipper.go:361 level=info msg="upload new block" id=01KEZTKRK6TGF9VQ53X3TRM8JK
+ts=2026-01-15T04:20:21.972714655Z caller=shipper.go:361 level=info msg="upload new block" id=01KEZTKTMSAKQRSXHYBN8E00KH
+ts=2026-01-15T05:21:29.713611142Z caller=shipper.go:361 level=info msg="upload new block" id=01KF01KMAJG6HXQ5WW6GEC3Q6T
+
+^C%                                                                                                                                                                                                                           ☁  thanos-demo  
+☁  thanos-demo  aws s3 ls  s3://thanos-alevoor                                                                     
+                           PRE 01KEZTKRK6TGF9VQ53X3TRM8JK/
+                           PRE 01KEZTKTMSAKQRSXHYBN8E00KH/
+                           PRE 01KF01KMAJG6HXQ5WW6GEC3Q6T/
+```
