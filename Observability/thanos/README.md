@@ -6,7 +6,7 @@
 # Limited long-term retention
 # Difficult to query metrics across multiple clusters
 # Kubernetes environments usually need HA, long-term storage, and global visibility — that’s where Thanos comes in.
--  I will install prometheus and thanos and use sidecar to ship logs to s3 bucket
+-  I will install prometheus and thanos and use sidecar to ship TSDB blocks to s3 bucket
 
 * caller=factory.go:53 level=info msg="loading bucket configuration"
 - I will wait for the  first successful upload
